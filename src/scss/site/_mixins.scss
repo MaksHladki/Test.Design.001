@@ -1,17 +1,14 @@
-$screen-xs: 480px;
-$screen-sm: 768px;
-$screen-md: 992px;
-$screen-lg: 1200px;
+//mixins
 
 @mixin respond-to($media) {
   @if $media == 'xs' {
     @media only screen and (max-width: $screen-xs) { @content; }
   }
   @else if $media == 'sm' {
-    @media only screen and (min-width: $screen-xs + 1) and (max-width: $screen-sm - 1) { @content; }
+    @media only screen and (min-width: $screen-xs + 1) and (max-width: $screen-sm) { @content; }
   }
   @else if $media == 'md' {
-    @media only screen and (min-width: $screen-sm + 1) and (max-width: $screen-md - 1) { @content; }
+    @media only screen and (min-width: $screen-sm + 1) and (max-width: $screen-md) { @content; }
   }
    @else if $media == 'lg' {
     @media only screen and (min-width: $screen-lg) { @content; }

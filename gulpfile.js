@@ -8,24 +8,29 @@ const gulp = require('gulp'),
   concat = require('gulp-concat'),
   htmlmin = require('gulp-htmlmin'),
   imagemin = require('gulp-imagemin'),
-  server = require('gulp-connect');
+  connect = require('gulp-connect'),
+  runSequence = require('run-sequence'),
+  clean = require('gulp-clean');
 
+const srcDir = './src';
 const srcPath = {
-  'scss': './src/css/**/*.scss',
-  'html': './src/view/**/*.html',
-  'img': './src/img/**/*.*',
-  'font': './src/font/**/*.*'
+  'scss': srcDir + '/scss/**/*.scss',
+  'scssMain': srcDir + '/scss/main.scss',
+  'html': srcDir + '/view/**/*.html',
+  'img': srcDir + '/img/**/*.*',
+  'font': srcDir + '/font/**/*.*'
 };
 
+const publicDir = './public';
 const publicPath = {
-  'css': './public/css',
-  'html': './public',
-  'img': './public/img',
-  'font': './public/font'
+  'css': publicDir + '/css',
+  'html': publicDir,
+  'img': publicDir + '/img',
+  'font': publicDir + '/font'
 };
 
 gulp.task('scss', () => {
-  gulp.src(srcPath.scss)
+  return gulp.src(srcPath.scssMain)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write())
@@ -38,7 +43,7 @@ gulp.task('scss', () => {
 });
 
 gulp.task('html', () => {
-  gulp.src(srcPath.html)
+  return gulp.src(srcPath.html)
     .pipe(htmlmin({
       collapseWhitespace: true
     }))
@@ -46,28 +51,42 @@ gulp.task('html', () => {
 });
 
 gulp.task('img', () => {
-  gulp.src(srcPath.img)
+  return gulp.src(srcPath.img)
     .pipe(imagemin())
     .pipe(gulp.dest(publicPath.img));
 });
 
 gulp.task('font', () => {
-  gulp.src(srcPath.font)
+  return gulp.src(srcPath.font)
     .pipe(gulp.dest(publicPath.font));
 });
 
+gulp.task('clean:public', () => {
+  return gulp.src(publicDir)
+    .pipe(clean({
+      force: true
+    }));
+});
 
-gulp.task('watch', function () {
-  server.server({
-    root: './public',
+gulp.task('server', () => {
+  connect.server({
+    root: publicDir,
     livereload: true,
     port: 8000
   });
+});
 
-  gulp.watch(srcPath.sass, ['scss']);
+gulp.task('build', () => {
+  runSequence('clean:public', ['scss', 'html', 'img', 'font']);
+});
+
+gulp.task('watch', function () {
+  gulp.watch(srcPath.scss, ['scss']);
   gulp.watch(srcPath.html, ['html']);
   gulp.watch(srcPath.img, ['img']);
   gulp.watch(srcPath.font, ['font']);
 });
 
-gulp.task('default', ['html', 'scss', 'img', 'font', 'watch']);
+gulp.task('default', () => {
+  runSequence('build', 'watch', 'server');
+});
