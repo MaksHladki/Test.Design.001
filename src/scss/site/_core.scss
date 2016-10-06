@@ -91,6 +91,11 @@
                 color: $title-color;
             }
         }
+        &.active {
+            a {
+                color: $attention-color;
+            }
+        }
     }
 }
 
@@ -362,12 +367,12 @@
     cursor: pointer;
     outline: none;
     display: inline-block;
+    box-shadow: -5px 5px 0px 0px rgba(0, 0, 0, 0.1);
     &.btn-product {
         color: $title-color;
         text-transform: uppercase;
         background-color: $content-color;
         text-decoration: none;
-        box-shadow: -5px 5px 0px 0px rgba(0, 0, 0, 0.1);
         margin-right: 11px;
         margin-bottom: 11px;
     }
