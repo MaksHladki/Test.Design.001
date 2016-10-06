@@ -4,7 +4,7 @@ const gulp = require('gulp'),
   sass = require('gulp-sass'),
   sourcemaps = require('gulp-sourcemaps'),
   autoprefixer = require('gulp-autoprefixer'),
-  minifyCSS = require('gulp-minify-css'),
+  cleanCSS = require('gulp-clean-css'),
   concat = require('gulp-concat'),
   htmlmin = require('gulp-htmlmin'),
   imagemin = require('gulp-imagemin'),
@@ -38,7 +38,7 @@ gulp.task('scss', () => {
       browsers: ['last 2 versions'],
     }))
     .pipe(concat('styles.min.css'))
-    .pipe(minifyCSS())
+    .pipe(cleanCSS())
     .pipe(gulp.dest(publicPath.css));
 });
 
